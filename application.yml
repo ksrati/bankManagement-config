@@ -1,0 +1,36 @@
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      service-breaker:
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 10
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 5s
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 10
+        slidingWindowType: COUNT_BASED
+        
+        
+
+  ratelimiter:
+    instances:
+      service-ratelimit:
+        limit-for-period: 2
+        limit-refresh-period: 4s
+        timeout-duration: 10s
+        register-health-indicator: true
+        event-consumer-buffer-size: 100
